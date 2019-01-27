@@ -52,7 +52,7 @@ Please set the environment variables as follows, since the following environment
 
 # XML Configuration File
 The VST Plugin requires a config file to successfully establish a TCP/IP connection to the SSR. The user has to create a file called ssremote_config.xml with the following content and it must be placed in the "SSREMOTE_VST" path env variable as above:
-
+```XML
 <?xml version="1.0" encoding="utf-8"?>
 <config>
   <network>
@@ -61,6 +61,8 @@ The VST Plugin requires a config file to successfully establish a TCP/IP connect
     <timeout>1000</timeout>
   </network>
 </config>
+```
+
 
 | Markup | Description |
 | ------:|:------------|
