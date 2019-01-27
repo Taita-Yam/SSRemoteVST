@@ -8,6 +8,7 @@ Since this is a experimental open source project, any contributions are very muc
 
 # Known Bugs
 This VST3 plugin will cause its host DAW to hang if the SSR is shut down while the VST is 'Connected'.
+
 This VST3's GUI window must remain open or minimised when connected to SSR, otherwise SSR suffers memory leaks
 
 
