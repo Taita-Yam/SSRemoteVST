@@ -1,4 +1,5 @@
-Introduction
+#Introduction
+
 This VST Plugin addresses the need for the automation of SoundScapeRenderer (SSR) scenes from a Digital Audio Workstation (DAW).
 
 This fork is an attempt to adapt the codebase to updated JUCE framework and the VST3 SDK. This VST can run in Nuendo, Cubase, Reaper and other DAW's but it has only been tested on a small number of Win10 machines. It is a 'bare-bones' implementation which bypasses some deprecated JUCE functions and addresses some performance issues that were causing crashes and hangs when multiple instances of the plugin were running in a DAW. Some functionality has been removed compared to the original codebase, notably any references to JACK (although JACK still needs to be present for SSR to run!).
