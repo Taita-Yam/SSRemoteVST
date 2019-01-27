@@ -91,7 +91,7 @@ The VST Plugins GUI is generally split in two sections; <b>General Controls</b> 
 |Name       |GUI Element|Description|
 |:---------:|:---------:|:---------:|
 |Connect    |Button     |connects or disconnects the connection to the SSR|
-|New Source **DISABLED** |Button     |creates a new source with default values for the parameters|
+|New Source **(DISABLED)** |Button     |creates a new source with default values for the parameters|
 
 ### Source Controls
 
@@ -99,12 +99,12 @@ The VST Plugins GUI is generally split in two sections; <b>General Controls</b> 
 |:---------:|:---------:|:---------:|
 |Source     |Dropdown   |select a source for manipulation|
 |Name       |Textfield  |read and writeable textfield for the name of the source|
-|Jackport   |Dropdown   |select the jackport the source shall connect to|
-|Model      |Dropdown   |select the type of model of the source|
-|Azimuth    |Textfield  |readable only textfield for displaying the sources orientation|
-|Mute       |Button     |mutes and unmutes the source|
-|Fix        |Button     |fix and unfix the source position|
-|Gain       |Slider     |adjust the gain of the source in dB|
+|Jackport **(DISABLED)**   |Dropdown   |select the jackport the source shall connect to|
+|Model **(NOT ACTIVE)**      |Dropdown   |select the type of model of the source|
+|Azimuth **(NOT ACTIVE)**    |Textfield  |readable only textfield for displaying the sources orientation|
+|Mute **(NOT ACTIVE)**      |Button     |mutes and unmutes the source|
+|Fix **(NOT ACTIVE)**        |Button     |fix and unfix the source position|
+|Gain **(NOT ACTIVE)**      |Slider     |adjust the gain of the source in dB|
 |Source Control Pad|2D Pad|displayes the sources position|
 |Zoom       |Buttons    |zooms in and out the Source Control Pad|
 |Scale Reference|-      |displays a scale reference in meter for the Source Control Pad|
@@ -115,19 +115,17 @@ The VST Plugins GUI is generally split in two sections; <b>General Controls</b> 
 
 The Host (DAW) is able to automate the following parameters:
 
++ Which Source to manipulate
 + X Position
 + Y Position
-+ Gain
-+ Mute
-+ Model
-+ Fixed
 
-Logfiles ## Logging is currently disabled!! ##
+# Logfiles (Logging is currently disabled!!)
 The Plug-In logs will be written to the file log.txt, located in the root directory.
 The logs will look as follows:
 
 [YYYY-MM-DD HH:mm:SS] [<LOGTYPE>] <Log text>
-Logging is currently disabled!!
+ 
+ <b><i>Logging is currently disabled!!</b></i>
 
 License
 GNU GENERAL PUBLIC LICENSE
