@@ -2,13 +2,22 @@
 
 This VST Plugin addresses the need for the automation of [SoundScapeRenderer (SSR)](http://spatialaudio.net/ssr/) scenes from a [Digital Audio Workstation (DAW)](https://en.wikipedia.org/wiki/Digital_audio_workstation).
 
-The SSRemote VST plugin was developed for Linux and tested with the [Ardour DAW](http://ardour.org/). Since the Plugin was developed in the light of cross-platform compatibility it might also run under other Operating Systems (OS) and DAWs.
+This fork is an attempt to adapt the codebase to Windows, so that the VST can run in Nuendo, Cubase, Reaper and other DAW's. It is a 'bare-bones' implementation which addresses some performance issues that were causing crashes and hangs when multiple instances of the plugin were running in a DAW. Some functionality has been removed compared to the original codebase. 
 
 Since this is a <b>experimental open source project</b>, any contributions are very much welcome!
+
+# Known Bugs
+
+VST will cause its host DAW to hang if the SSR is shut down while the VST is 'Connected'
+VST's GUI window must remain open or minimised when connected to SSR, otherwise SSR suffers memory leaks
 
 # Installation
 
 Please read the [installation guide](https://github.com/QULab/SSRemoteVST/blob/manual/INSTALLATION.md).
+
+You need to compile the boost lib's using the same compiler/linker as the VST itself. This fork is compiling and working using VS2017.
+
+All references to jack have been commented out. Consequently, the ability to add new sources to SSR from the VST is disabled.
 
 # Configuration
 
@@ -16,21 +25,21 @@ Please read the [installation guide](https://github.com/QULab/SSRemoteVST/blob/m
 
 Please set the environment variables as follows, since the following environment variables are not only needed for compilation but also at runtime:
 
-  The directory/location of the Steinberg VST3 SDK:
+  The directory/location of the Steinberg VST3 SDK (needed at compile time):
   
   ```bash
   # Steinberg VST3 Audio Plug-Ins SDK
   export VST3_SDK=/path/to/VST3SDK
   ```
 
-  The directory/location of the SSRemote VST:
+  The directory/location of the SSRemote VST (needed at runtime):
 
   ```bash
   # SSRemote VST
   export SSREMOTE_VST=/path/to/ssremote_vst
   ```
 
-  The directory/location of the JUCE Framework located in the SSRemote VST:
+  The directory/location of the JUCE Framework located in the SSRemote VST (needed at compile time):
   
   ```bash
   # SSRemote VST JUCE Framework
@@ -39,7 +48,7 @@ Please set the environment variables as follows, since the following environment
 
 ## XML Configuration File
 
-The VST Plugin requires a config file to successfully establish a TCP/IP connection to the SSR. The user has to create a file called <b>ssremote_config.xml</b> with the following content: 
+The VST Plugin requires a config file to successfully establish a TCP/IP connection to the SSR. The user has to create a file called <b>ssremote_config.xml</b> with the following content and it must be placed in the "SSREMOTE_VST" path env variable as above: 
 
 ```XML
 <?xml version="1.0" encoding="utf-8"?>
@@ -80,7 +89,8 @@ The VST Plugins GUI is generally splitted in two sections. The <b>General Contro
 |Name       |GUI Element|Description|
 |:---------:|:---------:|:---------:|
 |Connect    |Button     |connects or disconnects the connection to the SSR|
-|New Source |Button     |creates a new source with default values for the parameters|
+
+The 'New Source' button is disabled.
 
 ### Source Controls
 
@@ -88,7 +98,7 @@ The VST Plugins GUI is generally splitted in two sections. The <b>General Contro
 |:---------:|:---------:|:---------:|
 |Source     |Dropdown   |select a source for manipulation|
 |Name       |Textfield  |read and writeable textfield for the name of the source|
-|Jackport   |Dropdown   |select the jackport the source shall connect to|
+
 |Model      |Dropdown   |select the type of model of the source|
 |Azimuth    |Textfield  |readable only textfield for displaying the sources orientation|
 |Mute       |Button     |mutes and unmutes the source|
@@ -104,12 +114,10 @@ The VST Plugins GUI is generally splitted in two sections. The <b>General Contro
 
 The Host (DAW) is able to automate the following parameters:
 
++ Source to manipulate
 + X Position
 + Y Position
-+ Gain
-+ Mute
-+ Model
-+ Fixed
+
 
 ## Logfiles
 
@@ -119,6 +127,8 @@ The logs will look as follows:
 ```
 [YYYY-MM-DD HH:mm:SS] [<LOGTYPE>] <Log text>
 ```
+
+Logging is currently disabled.
 
 # License
 
