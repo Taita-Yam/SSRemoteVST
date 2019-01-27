@@ -1,4 +1,4 @@
-#Introduction
+# Introduction
 
 This VST Plugin addresses the need for the automation of SoundScapeRenderer (SSR) scenes from a Digital Audio Workstation (DAW).
 
@@ -6,23 +6,21 @@ This fork is an attempt to adapt the codebase to updated JUCE framework and the 
 
 Since this is a experimental open source project, any contributions are very much welcome!
 
-Known Bugs
+# Known Bugs
 This VST3 plugin will cause its host DAW to hang if the SSR is shut down while the VST is 'Connected'.
 This VST3's GUI window must remain open or minimised when connected to SSR, otherwise SSR suffers memory leaks
 
 
-#TODO :: Update this doc for Windows 
+# TODO :: Update this doc for Windows  /#TODO
 
-/#TODO
-
-Installation
+# Installation
 Please read the installation guide.
 
 You need to compile the boost lib's using the same compiler/linker as the VST itself. This fork is compiling and working using VS2017.
 
 All references to jack have been commented out. Consequently, the ability to add new sources to SSR from the VST is disabled.
 
-Configuration
+# Configuration
 Environment Variables
 Please set the environment variables as follows, since the following environment variables are not only needed for compilation but also at runtime:
 
@@ -36,9 +34,10 @@ The directory/location of the SSRemote VST (needed at runtime):
 export SSREMOTE_VST=/path/to/ssremote_vst
 The directory/location of the JUCE Framework located in the SSRemote VST (needed at compile time):
 
-# SSRemote VST JUCE Framework
+# SSRemote VST JUCE Framework (Not required if using VS2017 project created by Projucer)
 export JUCE_LIB_CODE=$SSREMOTE_VST/JUCE
-XML Configuration File
+
+# XML Configuration File
 The VST Plugin requires a config file to successfully establish a TCP/IP connection to the SSR. The user has to create a file called ssremote_config.xml with the following content and it must be placed in the "SSREMOTE_VST" path env variable as above:
 
 <?xml version="1.0" encoding="utf-8"?>
