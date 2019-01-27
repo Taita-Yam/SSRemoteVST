@@ -1,3 +1,17 @@
+#TODO :: Add more detailed Windows / VS2017 instructions
+
+# STEPS FOR WINDOWS / VS2017
+Download / Clone this repo
+Download & install/build boost filesystem
+Download & install JUCE
+Add VST SDK, Juce, boost paths to VS2017 project
+Add SSREMOTE_VST path to env variables
+Create the network config XML file and save in the SSREMOTE_VST path
+Build
+Load in host DAW or VST3 host
+
+
+
 # Installation / Compilation
 
 The following is a installation guide written for Linux Distributions. The system that was used for testing the guide is [Fedora 22](https://start.fedoraproject.org/). It may help you compiling the SSRemote VST but in no case asserts to claim completness.
