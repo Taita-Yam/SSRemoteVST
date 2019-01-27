@@ -11,6 +11,7 @@
  * http://www.qu.tu-berlin.de
  *
  * For more detailed information, please read the license.txt in the root directory.
+ * Stripped JACK -st
  */
 
 //Own Classes
@@ -25,7 +26,7 @@
 #include <memory>
 
 //JUCE Lib
-#include <JUCE/JuceHeader.h>
+#include <JuceLibraryCode/JuceHeader.h>
 
 
 /**

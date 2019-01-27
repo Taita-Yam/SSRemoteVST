@@ -17,7 +17,7 @@
 #include <memory>
 
 //JUCE Lib
-#include <JUCE/JuceHeader.h>
+#include <JuceLibraryCode/JuceHeader.h>
 
 //Own Libs
 #include <src/GUI/head_frame/network_gui_component.h>
@@ -116,7 +116,7 @@ namespace SSR
     /**
     * The new source button.
     */
-    std::unique_ptr<juce::TextButton> new_source_button;
+    //std::unique_ptr<juce::TextButton> new_source_button;
 
   };
 

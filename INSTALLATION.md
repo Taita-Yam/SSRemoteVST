@@ -1,88 +1,73 @@
 #TODO :: Add more detailed Windows / VS2017 instructions
 
-# STEPS FOR WINDOWS / VS2017
-Download / Clone this repo
-Download & install/build boost filesystem
-Download & install JUCE
-Add VST SDK, Juce, boost paths to VS2017 project
-Add SSREMOTE_VST path to env variables
-Create the network config XML file and save in the SSREMOTE_VST path
-Build
-Load in host DAW or VST3 host
+ROUGH STEPS FOR WINDOWS / VS2017
+
+1. Download / Clone this repo
+2. Download & install/build boost filesystem
+3. Download & install JUCE (using ver 5.4.1)
+4. Create new project with Projucer for a VST3 plugin
+5. Preserve contents of 'JuceLibraryCode' as created by projucer, but delete/move the default PluginProcessor and PluginEditor files 
+6. Add VST SDK, Juce, boost paths to VS2017 project
+7. Add SSREMOTE_VST path to env variables
+8. Copy this repo's folder 'src' into folder 'Source' as created by Projucer
+9. Add contents of 'src' to the VS2017 project as created by Projucer 
+10. Build
+11. Create the network config XML file and save it in the SSREMOTE_VST path folder
+10. Load the VST3 file into host DAW or VST3 host
+
+/ROUGH STEPS
 
 
+Installation / Compilation
+The following is a installation guide written for Linux Distributions. The system that was used for testing the guide is Fedora 22. It may help you compiling the SSRemote VST but in no case asserts to claim completness.
 
-# Installation / Compilation
+The Plugin uses the C++11 Standard which has to be supported by your compiler (e.g. at least GCC 4.7).
 
-The following is a installation guide written for Linux Distributions. The system that was used for testing the guide is [Fedora 22](https://start.fedoraproject.org/). It may help you compiling the SSRemote VST but in no case asserts to claim completness.
+Clone the VST Plugin repository from Github:
+# HTTPS
+git clone https://github.com/QULab/SSRemoteVST.git
 
-The Plugin uses the [C++11 Standard](https://en.wikipedia.org/wiki/C%2B%2B11) which has to be supported by your compiler (e.g. at least GCC 4.7). 
+# SSH
+git clone git@github.com:QULab/SSRemoteVST.git
+Install the Steinberg VST SDK
+For installing the Steinberg VST SDK checkout the Steinberg VST SDK Wiki Page.
 
-1. Clone the VST Plugin repository from Github:
+Install several dependencies
+The SSRemote VST Plugin uses several external libraries. The following is a list of possible dependencies you may have to solve befor compiling:
 
-  ```shell
-  # HTTPS
-  git clone https://github.com/QULab/SSRemoteVST.git
+Boost Libraries (boost-devel)
+OpenGL (freeglut-devel)
+Jack Audio Connection Kit (jack-audio-connection-kit-devel)
+ALSA Libraries (alsa-lib-devel)
+freetype Libraries (freetype-devel)
+X11 Libraries (libX11-devel, libXinerama-devel)
+Set the environment variables
+Please set the following environment variables described as follows:
 
-  # SSH
-  git clone git@github.com:QULab/SSRemoteVST.git
-  ```
-2. Install the Steinberg VST SDK
-  
-  For installing the Steinberg VST SDK checkout the [Steinberg VST SDK Wiki Page](https://github.com/QULab/SSRemoteVST/wiki/Steinberg-VST).
+The directory/location of the Steinberg VST3 SDK:
 
-3. Install several dependencies 
+# Steinberg VST3 Audio Plug-Ins SDK
+export VST3_SDK=/path/to/VST3SDK
+The directory/location of the SSRemote VST:
 
-  The SSRemote VST Plugin uses several external libraries. The following is a list of possible dependencies you may have to solve befor compiling:
+# SSRemote VST
+export SSREMOTE_VST=/path/to/ssremote_vst
+The directory/location of the JUCE Framework located in the SSRemote VST:
 
-  * Boost Libraries (boost-devel)
-  * OpenGL (freeglut-devel)
-  * Jack Audio Connection Kit (jack-audio-connection-kit-devel)
-  * ALSA Libraries (alsa-lib-devel)
-  * freetype Libraries (freetype-devel)
-  * X11 Libraries (libX11-devel, libXinerama-devel)
+# SSRemote VST JUCE Framework
+export JUCE_LIB_CODE=$SSREMOTE_VST/JUCE
+Compile the SSRemote VST Plugin
+Go to the folder of the SSRemote VST and compile as follows:
 
-4. Set the environment variables
+# go to the SSREmote VST folder
+cd $SSREMOTE_VST
 
-  Please set the following environment variables described as follows:
+# go to the linux build folder
+cd builds/linux
 
-  The directory/location of the Steinberg VST3 SDK:
-  
-  ```bash
-  # Steinberg VST3 Audio Plug-Ins SDK
-  export VST3_SDK=/path/to/VST3SDK
-  ```
+# compile
+make
 
-  The directory/location of the SSRemote VST:
-
-  ```bash
-  # SSRemote VST
-  export SSREMOTE_VST=/path/to/ssremote_vst
-  ```
-
-  The directory/location of the JUCE Framework located in the SSRemote VST:
-  
-  ```bash
-  # SSRemote VST JUCE Framework
-  export JUCE_LIB_CODE=$SSREMOTE_VST/JUCE
-  ```
-
-5. Compile the SSRemote VST Plugin
-
-  Go to the folder of the SSRemote VST and compile as follows:
-
-  ```bash
-  # go to the SSREmote VST folder
-  cd $SSREMOTE_VST
-
-  # go to the linux build folder
-  cd builds/linux
-
-  # compile
-  make
-
-  # compile multicore
-  make -j8
-  ```
-  
+# compile multicore
+make -j8
 Congratulations! You successfully compiled the SSRemote VST Plugin!

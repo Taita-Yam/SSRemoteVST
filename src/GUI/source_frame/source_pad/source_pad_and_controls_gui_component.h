@@ -1,6 +1,8 @@
 #ifndef SOURCE_PAD_AND_CONTROLS_GUI_COMPONENT_H
 #define SOURCE_PAD_AND_CONTROLS_GUI_COMPONENT_H
 
+#pragma once
+
 /**
  * GNU GENERAL PUBLIC LICENSE
  * Version 3, 29 June 2007
@@ -14,7 +16,7 @@
  */
 
 //JUCE Lib
-#include <JUCE/JuceHeader.h>
+#include <JuceLibraryCode/JuceHeader.h>
 
 //C++ Libs
 #include <memory>
@@ -24,6 +26,10 @@
 #include <src/GUI/source_frame/source_pad/zoom_gui_component.h>
 #include <src/controller.h>
 
+
+
+// typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
+
 namespace SSR
 {
 
@@ -32,11 +38,16 @@ namespace SSR
    * including a pad where the the source moves on a grid, two sliders
    * with which the user is able to control the sources position and a zoom
    * component with which the user is able to zoom in and out.
+   *
+   *ST removed from initialisation list
+   *
    */
+
+
   class Source_pad_and_controls_gui_component
-      : public juce::AudioProcessorEditor
-      , public juce::Slider::Listener
-      , public juce::ChangeListener
+      : public AudioProcessorEditor
+      , public Slider::Listener
+	  , public juce::ChangeListener
   {
 
   public:
@@ -96,7 +107,7 @@ namespace SSR
      *
      * @param           sliderThatWasMoved      The slider that was moved.
      */
-    void sliderValueChanged(juce::Slider* sliderThatWasMoved) override;
+    void sliderValueChanged(Slider* sliderThatWasMoved) override;
 
     /**
      * If the source is the zoom component, the x_axis_slider, the y_axis_slider
@@ -130,22 +141,27 @@ namespace SSR
      */
     void set_y_axis_slider_value(const double value);
 
+	Slider x_axis_slider;
+
+	Slider y_axis_slider;
+
+	std::unique_ptr <AudioProcessorValueTreeState::SliderAttachment> x_sliderAttach;
+
+	std::unique_ptr <AudioProcessorValueTreeState::SliderAttachment> y_sliderAttach;
+
   private:
+	  
+
+
+	  //std::unique_ptr<SliderAttachment> xAttach;
+
+	  //std::unique_ptr<SliderAttachment> yAttach;
+
 
     /**
      * The source pad.
      */
     std::unique_ptr<SSR::Source_pad_gui_component> pad;
-
-    /**
-     * The x axis slider.
-     */
-    std::unique_ptr<juce::Slider> x_axis_slider;
-
-    /**
-     * The Y axis slider.
-     */
-    std::unique_ptr<juce::Slider> y_axis_slider;
 
     /**
      * The zoom component.

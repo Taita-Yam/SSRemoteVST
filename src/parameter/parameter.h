@@ -284,13 +284,13 @@ namespace SSR {
          */
         friend void swap(Parameter<DiscreteType, ContinuousType> &lhs, Parameter<DiscreteType, ContinuousType> &rhs)
         {
-            using namespace std;
-            swap(lhs.discrete_value, rhs.discrete_value);
-            swap(lhs.default_discrete_value, rhs.default_discrete_value);
-            swap(lhs.continuous_value, rhs.continuous_value);
-            swap(lhs.translate_to_discrete, rhs.translate_to_discrete);
-            swap(lhs.translate_to_continuous, rhs.translate_to_continuous);
-            swap(lhs.name, rhs.name);
+            //using namespace std;
+            std::swap(lhs.discrete_value, rhs.discrete_value);
+			std::swap(lhs.default_discrete_value, rhs.default_discrete_value);
+			std::swap(lhs.continuous_value, rhs.continuous_value);
+			std::swap(lhs.translate_to_discrete, rhs.translate_to_discrete);
+			std::swap(lhs.translate_to_continuous, rhs.translate_to_continuous);
+			std::swap(lhs.name, rhs.name);
         }
 
     private:

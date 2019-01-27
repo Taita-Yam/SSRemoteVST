@@ -16,7 +16,7 @@ SSR::Source_pad_gui_component::Source_pad_gui_component(int width, int heigth)
 : Component("GUI_component_source_pad")
 , grid(nullptr)
 , source(new SSR::Source_gui_component())
-, scale_reference(new SSR::Scale_reference_GUI_component(width, 5))
+, scale_reference(new SSR::Scale_reference_GUI_component(width, 20))
 , current_discrete_x_position(0.0f)
 , current_discrete_y_position(0.0f)
 {

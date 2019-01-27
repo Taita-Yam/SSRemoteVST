@@ -11,7 +11,7 @@
  */
 
 //JUCE Lib
-#include <JUCE/JuceHeader.h>
+#include <JuceLibraryCode/JuceHeader.h>
 
 //Own Libs
 #include <src/GUI/head_frame/head_frame_gui_component.h>
@@ -20,16 +20,20 @@
 #include <src/controller.h>
 #include <src/GUI/gui_components_configurator.h>
 
+//, new_source_button(new juce::TextButton("new_source_button"))
+
 SSR::Head_frame_GUI_component::Head_frame_GUI_component(Controller* controller)
 : AudioProcessorEditor(controller)
 , network_component(new SSR::Network_gui_component(controller))
-, new_source_button(new juce::TextButton("new_source_button"))
+
 {
   addAndMakeVisible(*network_component);
   network_component->setBounds(35, 41, network_component->getWidth(), network_component->getHeight());
 
-  addAndMakeVisible(*new_source_button);
-  new_source_button->setBounds(744, 41, 138, 26);
+  // Make the "New Source" button invisible for now until the Jack stuff is sorted out
+
+  //addAndMakeVisible(*new_source_button);
+  //new_source_button->setBounds(744, 41, 138, 26);
 
   configure_new_source_button();
 
@@ -56,12 +60,12 @@ void SSR::Head_frame_GUI_component::paint(juce::Graphics& graphics)
 
 void SSR::Head_frame_GUI_component::buttonClicked(juce::Button* buttonThatWasClicked)
 {
-  Controller* processor = getProcessor();
+  //Controller* processor = getProcessor();
 
-  if (buttonThatWasClicked == new_source_button.get()) {
-      processor->new_source();
-      new_source_button->setToggleState(false, juce::dontSendNotification);
-  }
+  //if (buttonThatWasClicked == new_source_button.get()) {
+  //    processor->new_source();
+  //    new_source_button->setToggleState(false, juce::dontSendNotification);
+  //}
 
 }
 
@@ -77,7 +81,7 @@ void SSR::Head_frame_GUI_component::set_connected(const bool new_state)
 
 void SSR::Head_frame_GUI_component::configure_new_source_button()
 {
-  SSR::configure_text_button(*new_source_button, "New Source");
+  //SSR::configure_text_button(*new_source_button, "New Source");
 
-  new_source_button->addListener(this);
+  //new_source_button->addListener(this);
 }

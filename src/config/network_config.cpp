@@ -19,7 +19,7 @@
 SSR::Network_config::Network_config()
         : hostname("localhost")
         , port(4711)
-        , timeout_in_ms(1000)
+        , timeout_in_ms(1000) //was 1000
         , end_of_message('\0')
 {
 

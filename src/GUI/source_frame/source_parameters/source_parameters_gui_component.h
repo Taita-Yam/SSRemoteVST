@@ -14,7 +14,7 @@
  */
 
 //JUCE Lib
-#include <JUCE/JuceHeader.h>
+#include <JuceLibraryCode/JuceHeader.h>
 
 //Own Libs
 #include <memory>
@@ -181,7 +181,7 @@ namespace SSR
      * @param   entry           The entry which shall be selected by in the
      *                          jackport_dropdown.
      */
-    void set_jackport_selected_entry(const std::string& entry);
+    //void set_jackport_selected_entry(const std::string& entry);
 
     /**
      * Sets the mute button toggle state to the transferred state.
@@ -218,7 +218,7 @@ namespace SSR
      *
      * @see controller.h
      */
-    void reload_jackport_dropdown();
+    //void reload_jackport_dropdown();
 
     /**
      * Clears all the data of source_dropdown and fills it with the current
@@ -294,9 +294,15 @@ namespace SSR
     /**
      * The source dropdown.
      */
-    std::unique_ptr<juce::ComboBox> sources_dropdown;
+    //std::unique_ptr<juce::ComboBox> sources_dropdown;
 
-    /**
+	ComboBox sources_dropdown;
+
+	/** ValueTree attachment for sources_dropdown
+	*/
+	std::unique_ptr <AudioProcessorValueTreeState::ComboBoxAttachment> sourcesAttach;
+    
+	/**
      * The label for the source name
      */
     std::unique_ptr<juce::Label> name_label;
@@ -319,12 +325,12 @@ namespace SSR
     /**
      * The label for the jackport dropdown.
      */
-    std::unique_ptr<juce::Label> jackport_label;
+    //std::unique_ptr<juce::Label> jackport_label;
 
     /**
      * The jackport dropdown.
      */
-    std::unique_ptr<juce::ComboBox> jackport_dropdown;
+    //std::unique_ptr<juce::ComboBox> jackport_dropdown;
 
     /**
      * The label for the source model.
@@ -359,7 +365,7 @@ namespace SSR
     /**
      * This vector is needed to store all ids that have been put in
      **/
-    std::map<int, std::string> jackport_dropdown_menu_entries;
+    //std::map<int, std::string> jackport_dropdown_menu_entries;
 
     /**
      * Represents if the Source Name Text Editor UI element is currently

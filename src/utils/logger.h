@@ -41,7 +41,7 @@ namespace SSR
        */
       enum Level {
           INFO,
-          ERROR
+          ERRORz
       };
 
       /**

@@ -23,6 +23,11 @@
 #include <src/parameter/parameter.h>
 #include <src/scene/parameter_translation_functions.h>
 
+/**The name strings in the following initialisation list
+* were only called by the deprecated
+* Controller::getParameterName(int parameterIndex) function.
+*/
+
 SSR::Source::Source(const unsigned int id, const std::string name, float scene_range)
 : id(id)
 , x_position(   0.0f,
@@ -62,7 +67,7 @@ SSR::Source::Source(const unsigned int id, const std::string name, float scene_r
                 "Fixed")
 , name(name)
 , properties_file("")
-, jackport("capture_2")
+//, jackport("capture_2")
 {
   set_all_parameters_on_default();
   auto random_machine = SSR::Random_machine::get_instance();
@@ -70,11 +75,11 @@ SSR::Source::Source(const unsigned int id, const std::string name, float scene_r
   y_position.set_discrete_value(random_machine->generate_float(-1.0f, 1.0f));
 }
 
-SSR::Source::Source(const unsigned int id, const std::string name, float scene_range, const std::string jackport)
-: Source(id, name, scene_range)
-{
-  this->jackport = jackport;
-}
+//SSR::Source::Source(const unsigned int id, const std::string name, float scene_range, const std::string jackport)
+//: Source(id, name, scene_range)
+//{
+  //this->jackport = jackport;
+//}
 
 SSR::Source::Source(const SSR::Source& other)
 : id(other.id)
@@ -87,7 +92,7 @@ SSR::Source::Source(const SSR::Source& other)
 , fixed(other.fixed)
 , name(other.name)
 , properties_file(other.properties_file)
-, jackport(other.jackport)
+//, jackport(other.jackport)
 {
 
 }
@@ -115,8 +120,9 @@ void SSR::Source::swap(SSR::Source& first, SSR::Source& second)
   std::swap(first.fixed,                second.fixed);
   std::swap(first.name,                 second.name);
   std::swap(first.properties_file,      second.properties_file);
-  std::swap(first.jackport,             second.jackport);
+
 }
+//std::swap(first.jackport,             second.jackport);
 
 SSR::Source::~Source()
 {
@@ -255,9 +261,9 @@ std::string SSR::Source::get_name() const
   return name;
 }
 
-void SSR::Source::set_properties_file(const std::string name)
+void SSR::Source::set_properties_file(const std::string file_name) // Used to be called 'name'
 {
-  properties_file = name;
+  properties_file = file_name;
 }
 
 std::string SSR::Source::get_properties_file() const
@@ -265,15 +271,15 @@ std::string SSR::Source::get_properties_file() const
   return properties_file;
 }
 
-void SSR::Source::set_jackport(const std::string name)
-{
-  jackport = name;
-}
+//void SSR::Source::set_jackport(const std::string name)
+//{
+//  jackport = name;
+//}
 
-std::string SSR::Source::get_jackport() const
-{
-  return jackport;
-}
+//std::string SSR::Source::get_jackport() const
+//{
+//  return jackport;
+//}
 
 void SSR::Source::set_all_parameters_on_default()
 {
@@ -299,7 +305,7 @@ bool operator==(const SSR::Source& lhs, const SSR::Source& rhs)
   is_equal = is_equal ? lhs.get_fixed()                 == rhs.get_fixed()              : false;
   is_equal = is_equal ? lhs.get_id()                    == rhs.get_id()                 : false;
   is_equal = is_equal ? lhs.get_name()                  == rhs.get_name()               : false;
-  is_equal = is_equal ? lhs.get_jackport()              == rhs.get_jackport()           : false;
+  //is_equal = is_equal ? lhs.get_jackport()              == rhs.get_jackport()           : false;
   is_equal = is_equal ? lhs.get_properties_file()       == rhs.get_properties_file()    : false;
 
   return is_equal;

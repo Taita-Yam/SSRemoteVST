@@ -18,7 +18,7 @@
 #include <memory>
 
 //JUCE Include
-#include <JUCE/JuceHeader.h>
+#include <JuceLibraryCode/JuceHeader.h>
 
 namespace SSR
 {

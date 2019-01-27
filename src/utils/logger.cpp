@@ -64,8 +64,8 @@ void SSR::Logger::append_log_level(SSR::Logger::Level level)
       *sstream << "[INFO] ";
       break;
 
-    case ERROR:
-      *sstream << "[ERROR] ";
+    case ERRORz:
+      *sstream << "[ERRORz] ";
       break;
 
     default:

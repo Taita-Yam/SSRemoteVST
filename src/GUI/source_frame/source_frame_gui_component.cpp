@@ -81,10 +81,10 @@ void SSR::Source_frame_gui_component::set_model_selected_id(const int id)
   source_parameters->set_model_selected_id(id);
 }
 
-void SSR::Source_frame_gui_component::set_jackport_selected_entry(const std::string& entry)
-{
-  source_parameters->set_jackport_selected_entry(entry);
-}
+//void SSR::Source_frame_gui_component::set_jackport_selected_entry(const std::string& entry)
+//{
+//  source_parameters->set_jackport_selected_entry(entry);
+//}
 
 void SSR::Source_frame_gui_component::set_mute_button_toggle_state(const bool state)
 {

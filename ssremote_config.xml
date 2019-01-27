@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config><network><host>localhost</host><port>4711</port><timeout>100</timeout></network></config>

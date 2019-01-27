@@ -19,10 +19,10 @@
 #include <exception>
 
 //Jack Libs
-#include <jack/types.h>
+//#include <jack/types.h>
 
 //Own Libs
-#include <src/utils/jack_client.h>
+//#include <src/utils/jack_client.h>
 #include <src/utils/helper.h>
 #include <src/parameter/parameter.h>
 #include <src/GUI/source_frame/source_frame_gui_component.h>
@@ -51,7 +51,7 @@ Main_GUI_component::Main_GUI_component(Controller* controller)
 
   processor->read_ssr_incoming_message();
 
-  startTimer(10);//starts timer with interval of 50mS
+  startTimer(200);//starts timer with interval of 100mS
 }
 
 Main_GUI_component::~Main_GUI_component()
@@ -86,20 +86,20 @@ void Main_GUI_component::timerCallback()
       source_frame->set_name_text_editor_text(juce::String(source.get_name()));
 
       //Be carefull: When setting the new value, the parameter_source_gain has first to be converted from linear to dB!
-      source_frame->set_gain_slider_value(SSR::helper::linear_to_dB(source.get_gain().get_discrete_value()));
-      source_frame->set_mute_button_toggle_state(source.get_mute().get_discrete_value());
-      source_frame->set_fixed_button_toggle_state(source.get_fixed().get_discrete_value());
+      //source_frame->set_gain_slider_value(SSR::helper::linear_to_dB(source.get_gain().get_discrete_value()));
+      //source_frame->set_mute_button_toggle_state(source.get_mute().get_discrete_value());
+      //source_frame->set_fixed_button_toggle_state(source.get_fixed().get_discrete_value());
 
-      bool model_point = source.get_model_point().get_discrete_value();
+      //bool model_point = source.get_model_point().get_discrete_value();
 
-      if (model_point) {
-          source_frame->set_model_selected_id(1);
-      } else {
-          source_frame->set_model_selected_id(2);
-      }
+      //if (model_point) {
+          //source_frame->set_model_selected_id(1);
+      //} else {
+          //source_frame->set_model_selected_id(2);
+      //}
 
-      const std::string entry = source.get_jackport();
-      source_frame->set_jackport_selected_entry(entry);
+      //const std::string entry = source.get_jackport();
+      //source_frame->set_jackport_selected_entry(entry);
 
       source_frame->reload_source_dropdown();
 

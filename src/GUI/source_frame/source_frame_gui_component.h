@@ -17,7 +17,7 @@
 #include <memory>
 
 //JUCE Lib
-#include <JUCE/JuceHeader.h>
+#include <JuceLibraryCode/JuceHeader.h>
 
 #include <src/GUI/source_frame/source_pad/source_pad_and_controls_gui_component.h>
 #include <src/GUI/source_frame/source_parameters/source_parameters_gui_component.h>
@@ -151,7 +151,7 @@ namespace SSR
      * @param   entry           The entry which shall be selected by in the
      *                          jackport_dropdown.
      */
-    void set_jackport_selected_entry(const std::string& entry);
+    //void set_jackport_selected_entry(const std::string& entry);
 
     /**
      * Sets the mute button toggle state to the transferred state.

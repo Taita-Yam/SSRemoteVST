@@ -16,34 +16,39 @@
 #include <string>
 #include <map>
 #include <algorithm>
+#include <iostream>
 
 //Own Libs
 #include <src/GUI/gui_components_configurator.h>
 #include <src/config/ssr_colour.h>
 #include <src/controller.h>
-#include <src/utils/logger.h>
+//#include <src/utils/logger.h>
 
+
+// , sources_dropdown(new juce::ComboBox("sources_dropwdown"))
 SSR::Source_parameters_gui_component::Source_parameters_gui_component(Controller* controller)
 : AudioProcessorEditor(controller)
 , name_text_editor_is_changing(false)
 , fixed_button(new juce::TextButton("fixed_button"))
 , mute_button(new juce::TextButton("mute_button"))
 , source_label(new juce::Label("id_label", TRANS("Source")))
-, sources_dropdown(new juce::ComboBox("sources_dropwdown"))
 , name_label(new juce::Label("name_label", TRANS("Name")))
 , name_text_editor(new juce::TextEditor("name_text_editor"))
 , orientation_label(new juce::Label("orientation_label", TRANS("Azimuth")))
 , orientation_text_editor(new juce::TextEditor("orientation_text_editor"))
-, jackport_label(new juce::Label("jackport_label", TRANS("Jackport")))
-, jackport_dropdown(new juce::ComboBox("jackport_dropdown"))
+//, jackport_label(new juce::Label("jackport_label", TRANS("Jackport")))
+//, jackport_dropdown(new juce::ComboBox("jackport_dropdown"))
 , gain_slider(new juce::Slider("gain_slider"))
 , gain_label(new juce::Label("gain_label", TRANS("Gain")))
 , model_label(new juce::Label("model_label", TRANS("Model")))
 , model_dropdown(new juce::ComboBox("model_dropdown"))
 {
+  
+	sourcesAttach = std::make_unique<AudioProcessorValueTreeState::ComboBoxAttachment>(controller->treeState, SOURCE_ID, sources_dropdown);
+	
   make_all_visible();
   configure_all_components();
-  reload_jackport_dropdown();
+  //reload_jackport_dropdown();
   set_bounds();
   setSize(450, 400);
 }
@@ -73,17 +78,20 @@ void SSR::Source_parameters_gui_component::sliderValueChanged(juce::Slider* slid
 
 }
 
+  /*if (comboBoxThatHasChanged == jackport_dropdown.get()) {
+      std::string selected_port = jackport_dropdown->getText().toStdString();
+      getProcessor()->set_jackport_of_selected_source(selected_port);
+  } else
+  */
+
 void SSR::Source_parameters_gui_component::comboBoxChanged(juce::ComboBox* comboBoxThatHasChanged)
 {
 
-  if (comboBoxThatHasChanged == jackport_dropdown.get()) {
-      std::string selected_port = jackport_dropdown->getText().toStdString();
-      getProcessor()->set_jackport_of_selected_source(selected_port);
-  } else if (comboBoxThatHasChanged == model_dropdown.get()) {
+  	if (comboBoxThatHasChanged == model_dropdown.get()) {
       int set_id = model_dropdown->getSelectedId();
       getProcessor()->set_model_point_discrete_of_selected_source(set_id == 1);
-  } else if (comboBoxThatHasChanged == sources_dropdown.get()) {
-      int id = sources_dropdown->getSelectedId();
+  } else if (comboBoxThatHasChanged == &sources_dropdown) {
+      int id = sources_dropdown.getSelectedId();
       getProcessor()->select_source(id);
   }
 
@@ -127,6 +135,8 @@ void SSR::Source_parameters_gui_component::set_model_selected_id(const int id)
   model_dropdown->setSelectedId(id, juce::dontSendNotification);
 }
 
+
+/*
 void SSR::Source_parameters_gui_component::set_jackport_selected_entry(const std::string& entry)
 {
 
@@ -145,12 +155,14 @@ void SSR::Source_parameters_gui_component::set_jackport_selected_entry(const std
 
       if (!entry_exists) {
           std::string message = "jackport_dropdown_menu entry " + entry + " does not exist in dropdown menu!";
-          SSR::Logger::get_instance()->log(SSR::Logger::Level::ERROR, message, LOG_TO_FILE);
+          SSR::Logger::get_instance()->log(SSR::Logger::Level::ERRORz, message, LOG_TO_FILE);
       }
 
   }
 
 }
+
+*/
 
 void SSR::Source_parameters_gui_component::set_mute_button_toggle_state(const bool state)
 {
@@ -167,6 +179,7 @@ void SSR::Source_parameters_gui_component::set_name_text_editor_text(const juce:
   set_text_editor_text(*name_text_editor, text, name_text_editor_is_changing);
 }
 
+/*
 void SSR::Source_parameters_gui_component::reload_jackport_dropdown()
 {
   //Fills the Dropdown with all jack ports
@@ -187,18 +200,20 @@ void SSR::Source_parameters_gui_component::reload_jackport_dropdown()
 
 }
 
+*/
+
 void SSR::Source_parameters_gui_component::reload_source_dropdown()
 {
   Controller* controller = getProcessor();
   std::shared_ptr< std::vector< std::pair<unsigned int, std::string> > > ids_and_names = controller->get_source_ids_and_names();
 
-  sources_dropdown->clear(juce::dontSendNotification);
+  sources_dropdown.clear(juce::dontSendNotification);
 
   std::for_each(begin(*ids_and_names), end(*ids_and_names), [=](std::pair<unsigned int, std::string> p) {
-    sources_dropdown->addItem(p.second, p.first);
+    sources_dropdown.addItem(p.second, p.first);
   });
 
-  sources_dropdown->setSelectedId(controller->get_source().get_id(), juce::dontSendNotification);
+  sources_dropdown.setSelectedId(controller->get_source().get_id(), juce::sendNotificationAsync);
 }
 
 void SSR::Source_parameters_gui_component::make_all_visible()
@@ -210,12 +225,12 @@ void SSR::Source_parameters_gui_component::make_all_visible()
   addAndMakeVisible(*name_text_editor);
   addAndMakeVisible(*orientation_label);
   addAndMakeVisible(*orientation_text_editor);
-  addAndMakeVisible(*jackport_label);
-  addAndMakeVisible(*jackport_dropdown);
+  //addAndMakeVisible(*jackport_label);
+  //addAndMakeVisible(*jackport_dropdown);
   addAndMakeVisible(*gain_slider);
   addAndMakeVisible(*model_label);
   addAndMakeVisible(*model_dropdown);
-  addAndMakeVisible(*sources_dropdown);
+  addAndMakeVisible(sources_dropdown);
   addAndMakeVisible(*gain_label);
 }
 
@@ -232,10 +247,11 @@ void SSR::Source_parameters_gui_component::configure_text_editors()
 {
   SSR::configure_text_editor(*name_text_editor, false, true, 30, juce::String(""), juce::String("Default Source Name"));
   name_text_editor->addListener(this);
+  name_text_editor->setColour(TextEditor::backgroundColourId, SSR::colour::get_colour(SSR::colour::Colours::purple));
 
   SSR::configure_text_editor(*orientation_text_editor, true, false, 8, juce::String(""), juce::String("0.0"));
   orientation_text_editor->addListener(this);
-  orientation_text_editor->setColour(TextEditor::backgroundColourId, SSR::colour::get_colour(SSR::colour::Colours::foreground_grey));
+  orientation_text_editor->setColour(TextEditor::backgroundColourId, SSR::colour::get_colour(SSR::colour::Colours::purple));
 }
 
 void SSR::Source_parameters_gui_component::configure_text_buttons()
@@ -254,28 +270,28 @@ void SSR::Source_parameters_gui_component::configure_labels()
   SSR::configure_label(*source_label,           background_colour);
   SSR::configure_label(*name_label,             background_colour);
   SSR::configure_label(*orientation_label,      background_colour);
-  SSR::configure_label(*jackport_label,         background_colour);
+  //SSR::configure_label(*jackport_label,         background_colour);
   SSR::configure_label(*model_label,            background_colour);
   SSR::configure_label(*gain_label,             background_colour);
 }
 
 void SSR::Source_parameters_gui_component::configure_dropdowns()
 {
-  SSR::configure_dropdown(*jackport_dropdown, juce::String("No Jackports available!"));
-  jackport_dropdown->addListener(this);
+  //SSR::configure_dropdown(*jackport_dropdown, juce::String("No Jackports available!"));
+  //jackport_dropdown->addListener(this);
 
   SSR::configure_dropdown(*model_dropdown, juce::String("No Model available!"));
   model_dropdown->addItem("point source", 1);
   model_dropdown->addItem("plain wave", 2);
   model_dropdown->addListener(this);
 
-  SSR::configure_dropdown(*sources_dropdown, juce::String("N/A"));
+  SSR::configure_dropdown(sources_dropdown, juce::String("N/A"));
 
   reload_source_dropdown();
 
-  sources_dropdown->addListener(this);
+  sources_dropdown.addListener(this);
 
-  sources_dropdown->setSelectedId(1, juce::dontSendNotification);
+  //sources_dropdown.setSelectedId(1, juce::dontSendNotification);
 }
 
 void SSR::Source_parameters_gui_component::configure_sliders()
@@ -302,16 +318,16 @@ void SSR::Source_parameters_gui_component::set_bounds()
   int current_y = 0;
 
   source_label->setBounds(0, current_y, standard_label_width, standard_heigth);
-  sources_dropdown->setBounds(middle_line, 0, standard_width, standard_heigth);
+  sources_dropdown.setBounds(middle_line, 0, standard_width, standard_heigth);
   current_y += standard_heigth + gap_standard;
 
   name_label->setBounds(0, current_y, standard_label_width, standard_heigth);
   name_text_editor->setBounds(middle_line, current_y, standard_width, standard_heigth);
   current_y += standard_heigth + gap_standard;
 
-  jackport_label->setBounds(0, current_y, standard_label_width, standard_heigth);
-  jackport_dropdown->setBounds(middle_line, current_y, standard_width, standard_heigth);
-  current_y += standard_heigth + gap_standard;
+  //jackport_label->setBounds(0, current_y, standard_label_width, standard_heigth);
+  //jackport_dropdown->setBounds(middle_line, current_y, standard_width, standard_heigth);
+  //current_y += standard_heigth + gap_standard;
 
   model_label->setBounds(0, current_y, standard_label_width, standard_heigth);
   model_dropdown->setBounds(middle_line, current_y, standard_width, standard_heigth);

@@ -17,7 +17,7 @@
 #include <memory>
 
 //JUCE Lib
-#include <JUCE/JuceHeader.h>
+#include <JuceLibraryCode/JuceHeader.h>
 
 //Own Libs
 #include <src/controller.h>
@@ -35,7 +35,7 @@ namespace SSR
    */
   class Network_gui_component
       : public juce::AudioProcessorEditor,
-        public juce::ButtonListener,
+		public juce::Button::Listener,
         public juce::ComponentListener
   {
 
@@ -101,7 +101,7 @@ namespace SSR
      *
      * @param           buttonThatWasClicked            The button that was clicked.
      */
-    virtual void buttonClicked(Button* button) override;
+	virtual void buttonClicked(Button* button);// override;
 
   private:
 

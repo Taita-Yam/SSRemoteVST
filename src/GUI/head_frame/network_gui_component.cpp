@@ -11,7 +11,7 @@
  */
 
 //JUCE Lib
-#include <JUCE/JuceHeader.h>
+#include <JuceLibraryCode/JuceHeader.h>
 
 //C++ Libs
 #include <memory>
@@ -60,6 +60,10 @@ void SSR::Network_gui_component::buttonClicked(Button* button)
       if (!is_connected) {
           processor->connect();
       }
+
+	  else {
+		  processor->disconnect();
+	  }
 
       is_connected = processor->is_connected_to_ssr();
 

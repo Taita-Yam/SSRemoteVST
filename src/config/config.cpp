@@ -22,7 +22,7 @@
 
 //Own includes
 #include <src/config/config.h>
-#include <src/utils/logger.h>
+//#include <src/utils/logger.h>
 
 SSR::Config::Config(boost::filesystem::path& config_file)
 : config_file(config_file)
@@ -46,12 +46,12 @@ void SSR::Config::load_config_xml_file()
         //Get all config stuff
         std::string hostname    = document.get("config.network.host", "localhost");
         int port                = document.get("config.network.port", 4711);
-        int timeout             = document.get("config.network.tiemout", 1000);
+        int timeout             = document.get("config.network.timeout", 1000);
 
         set_network_config(hostname, port, timeout);
 
     } catch (const boost::property_tree::xml_parser::xml_parser_error& e) {
-        SSR::Logger::get_instance()->log(SSR::Logger::Level::ERROR, e.what(), true);
+        //SSR::Logger::get_instance()->log(SSR::Logger::Level::ERRORz, e.what(), true);
     }
 
 }
@@ -67,7 +67,7 @@ void SSR::Config::write_config_xml_file()
     try {
         boost::property_tree::write_xml(config_file.generic_string(), document);
     } catch (const boost::property_tree::xml_parser::xml_parser_error& e) {
-        SSR::Logger::get_instance()->log(SSR::Logger::Level::ERROR, e.what(), true);
+        //SSR::Logger::get_instance()->log(SSR::Logger::Level::ERRORz, e.what(), true);
     }
 
 }

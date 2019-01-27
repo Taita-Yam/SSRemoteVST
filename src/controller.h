@@ -22,10 +22,9 @@
 #include <map>
 
 //JUCE Lib
-#include <JUCE/JuceHeader.h>
+#include <JuceLibraryCode/JuceHeader.h>
 
 //Own classes
-#include <src/utils/jack_client.h>
 #include <src/utils/tcp_connection.h>
 #include <src/utils/ssr_requester.h>
 #include <src/parameter/parameter.h>
@@ -33,10 +32,20 @@
 #include <src/utils/update_specificator.h>
 #include <src/scene/scene.h>
 
+
 //Boost
 #include <boost/filesystem.hpp>
 
 #define LOG_TO_FILE 1
+
+//Defines
+#define X_ID "x_id"
+#define X_NAME "X Position"
+#define Y_ID "y_id"
+#define Y_NAME "Y Position"
+
+#define SOURCE_ID "source_id"
+#define SOURCE_NAME "Which Source"
 
 /**
  * This class represents the controller of this VST Plugin deriving from the
@@ -56,7 +65,7 @@ public:
 
   /**
    * Constructor initializing the ui_update_flag with true and the scene with a
-   * range of 20.0.
+   * range of 30.0.
    *
    * Loads the config for the VST Plugin, network connects to the SSR, registers
    * this VST Plugin at the Jack Server.
@@ -198,7 +207,7 @@ public:
    *
    * @return channelIndex + 1.
    **/
-  const String getInputChannelName(int channelIndex) const override;
+  //const String getInputChannelName(int channelIndex) const override;
 
   /**
    * Currently returns channelIndex + 1.
@@ -220,7 +229,7 @@ public:
    *
    * @return channelIndex + 1
    **/
-  const String getOutputChannelName(int channelIndex) const override;
+  //const String getOutputChannelName(int channelIndex) const override;
 
   /**
    * This method currently always returns true.
@@ -237,7 +246,7 @@ public:
    * @return    true if the specified channel is part of a stereo pair with its
    *            neighbour.
    */
-  bool isInputChannelStereoPair(int index) const override;
+  //bool isInputChannelStereoPair(int index) const override;
 
   /**
    * This method currently always returns true.
@@ -252,7 +261,7 @@ public:
    * @return    true if the specified channel is part of a stereo pair with its
    *            neighbour.
    */
-  bool isOutputChannelStereoPair(int index) const override;
+  //bool isOutputChannelStereoPair(int index) const override;
 
   /**
    * This method currently always returns false.
@@ -267,7 +276,7 @@ public:
    *
    * @return true if a silent input always produces a silent output.
    */
-  bool silenceInProducesSilenceOut() const override;
+  //bool silenceInProducesSilenceOut() const override;
 
   /**
    * This method currently always returns 0.0.
@@ -385,7 +394,7 @@ public:
    *
    * @return the number of parameters.
    */
-  int getNumParameters() override;
+  //int getNumParameters() override;
 
   /**
    * Returns the parameters name identified by the transferred parameterIndex.
@@ -404,7 +413,7 @@ public:
    *
    * @return the parameters name identified by the parameterIndex.
    **/
-  const String getParameterName (int parameterIndex) override;
+  //const String getParameterName (int parameterIndex) override;
 
   /**
    * Returns the parameter value identified by the transferred index.
@@ -432,7 +441,7 @@ public:
    *
    * @return the parameter value identified by the transferred index.
    **/
-  float getParameter(int index) override;
+  //float getParameter(int index) override;
 
   /**
    * Return the parameters value identified by the transferred index as
@@ -452,7 +461,7 @@ public:
    * @return    the parameters value identified by the transferred index as
    *            a String.
    **/
-  const String getParameterText(int index) override;
+  //const String getParameterText(int index) override;
 
   /**
    * Sets the parameter indexed by the transferred parameter parameterIndex
@@ -505,7 +514,7 @@ public:
    * @param     newValue        The new value to which the parameter shall be
    *                            set to.
    */
-  void setParameter(int parameterIndex, float newValue) override;
+  //void setParameter(int parameterIndex, float newValue) override;
 
   /**
    * Currently returns 1.
@@ -640,6 +649,14 @@ public:
    */
   void setStateInformation(const void* data, int sizeInBytes);
 
+  /**
+  * AudioProcessValueTreeState for updated handling of
+  * parameters, automation and host communication
+  */
+  AudioProcessorValueTreeState treeState;
+
+  
+
   //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   // The following methods are own declarations
   //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -739,7 +756,7 @@ public:
    * @param           jackport        The jackport the current selected
    *                                  source shall be set to.
    */
-  void set_jackport_of_selected_source(const std::string jackport);
+  //void set_jackport_of_selected_source(const std::string jackport);
 
   /**
    * Changes the current selected source to the source with the transferred
@@ -781,6 +798,8 @@ public:
    */
   void connect();
 
+  void disconnect();
+
   /**
    * Returns true if the connection to SSR is established.
    *
@@ -818,7 +837,7 @@ public:
    *
    * @return   all jackports specified by the flags.
    **/
-  std::vector<std::string> get_all_jack_ports(const unsigned long flags);
+  //std::vector<std::string> get_all_jack_ports(const unsigned long flags);
 
   /**
    * This method will update the SSR by composing a string with all information
@@ -840,6 +859,7 @@ public:
    * @return the sources ids and names.
    */
   std::shared_ptr< std::vector< std::pair<unsigned int, std::string> > > get_source_ids_and_names();
+
 
 private:
 
@@ -899,7 +919,7 @@ private:
   /**
    * The jack client managing the provided jack ports.
    */
-  std::unique_ptr<SSR::Jack_client> jack_client;
+  //std::unique_ptr<SSR::Jack_client> jack_client;
 
   /**
    * This is the SSR requester, requesting changes of the SSR scene.

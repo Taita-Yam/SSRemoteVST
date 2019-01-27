@@ -22,7 +22,7 @@
 #include <src/parameter/parameter.h>
 
 //JUCE Lib
-#include <JUCE/JuceHeader.h>
+#include <JuceLibraryCode/JuceHeader.h>
 
 typedef std::vector<SSR::Source>::iterator source_iterator;
 
@@ -31,8 +31,9 @@ SSR::Scene::Scene(float scene_range)
 , ids_and_names(new std::vector< std::pair<unsigned int, std::string> >())
 , scene_range(scene_range)
 , current_selected_source()
+
 {
-  new_source("Default Source");
+	new_source("Default Source");
 }
 
 SSR::Scene::~Scene()
@@ -58,7 +59,13 @@ void SSR::Scene::interpret_xml_message(std::string xml_message)
 
                 if (id_already_in_use(id)) {
 
-                    manipulate_source(get_iterator(id), e);
+					// ONLY UPDATE THE SELECTED SOURCE!!
+
+					if (id == get_id_of_selected_source()) {
+
+						manipulate_source(get_iterator(id), e);
+
+					}
 
                 } else {
 
@@ -123,33 +130,35 @@ unsigned int SSR::Scene::new_source(const std::string name)
   return id;
 }
 
-bool SSR::Scene::new_source(const std::string name, const unsigned int id)
-{
-  bool source_successfully_created = false;
+//bool SSR::Scene::new_source(const std::string name, const unsigned int id)
+//{
+  //bool source_successfully_created = false;
 
-  if (!id_already_in_use(id)) {
-      sources->push_back(SSR::Source(id, name, scene_range));
-      ids_and_names->push_back( std::pair<unsigned int, std::string>(id, name) );
-      current_selected_source = get_iterator(id);
-      source_successfully_created = true;
-  }
+  //if (!id_already_in_use(id)) {
+      //sources->push_back(SSR::Source(id, name, scene_range));
+      //ids_and_names->push_back( std::pair<unsigned int, std::string>(id, name) );
+      //current_selected_source = get_iterator(id);
+      //source_successfully_created = true;
+  //}
 
-  return source_successfully_created;
-}
+  //return source_successfully_created;
+//}
 
-bool SSR::Scene::new_source(const std::string name, const unsigned int id, const std::string jackport)
-{
-  bool source_successfully_created = false;
 
-  if (!id_already_in_use(id)) {
-      sources->push_back(SSR::Source(id, name, scene_range, jackport));
-      ids_and_names->push_back( std::pair<unsigned int, std::string>(id, name) );
-      current_selected_source = get_iterator(id);
-      source_successfully_created = true;
-  }
+//bool SSR::Scene::new_source(const std::string name, const unsigned int id, const std::string jackport)
+//{
+  //bool source_successfully_created = false;
 
-  return source_successfully_created;
-}
+//  if (!id_already_in_use(id)) {
+//      sources->push_back(SSR::Source(id, name, scene_range, jackport));
+//      ids_and_names->push_back( std::pair<unsigned int, std::string>(id, name) );
+//      current_selected_source = get_iterator(id);
+//      source_successfully_created = true;
+//  }
+
+  //return source_successfully_created;
+//}
+
 
 void SSR::Scene::set_id_of_selected_source(const int id)
 {
@@ -286,15 +295,15 @@ std::string SSR::Scene::get_properties_file_of_selected_source() const
   return current_selected_source->get_properties_file();
 }
 
-void SSR::Scene::set_jackport_of_selected_source(const std::string value)
-{
-  current_selected_source->set_jackport(value);
-}
+//void SSR::Scene::set_jackport_of_selected_source(const std::string value)
+//{
+//  current_selected_source->set_jackport(value);
+//}
 
-std::string SSR::Scene::get_jackport_of_selected_source() const
-{
-  return current_selected_source->get_jackport();
-}
+//std::string SSR::Scene::get_jackport_of_selected_source() const
+//{
+//  return current_selected_source->get_jackport();
+//}
 
 // PRIVATE
 
@@ -357,26 +366,26 @@ void SSR::Scene::set_id_of_source(const unsigned int old_id, const unsigned int 
 void SSR::Scene::manipulate_source(source_iterator source_to_manipulate, juce::XmlElement* element)
 {
 
-  if (element->hasAttribute("volume")) {
-      source_to_manipulate->set_discrete_gain(static_cast<float>(element->getDoubleAttribute("volume")), false);
-  }
+  //if (element->hasAttribute("volume")) {
+     // source_to_manipulate->set_discrete_gain(static_cast<float>(element->getDoubleAttribute("volume")), false);
+  //}
 
   if (element->hasAttribute("name")) {
       std::string name = element->getStringAttribute("name").toStdString();
       set_name_of_source(source_to_manipulate->get_id(), name);
   }
 
-  if (element->hasAttribute("mute")) {
-      source_to_manipulate->set_discrete_mute(element->getBoolAttribute("mute"));
-  }
+  //if (element->hasAttribute("mute")) {
+      //source_to_manipulate->set_discrete_mute(element->getBoolAttribute("mute"));
+  //}
 
-  if (element->hasAttribute("model")) {
-      source_to_manipulate->set_discrete_model_point(element->getStringAttribute("model").toStdString() == "point");
-  }
+  //if (element->hasAttribute("model")) {
+      //source_to_manipulate->set_discrete_model_point(element->getStringAttribute("model").toStdString() == "point");
+  //}
 
-  if (element->hasAttribute("properties_file")) {
-      source_to_manipulate->set_properties_file(element->getStringAttribute("properties_file").toStdString());
-  }
+  //if (element->hasAttribute("properties_file")) {
+      //source_to_manipulate->set_properties_file(element->getStringAttribute("properties_file").toStdString());
+ //}
 
   forEachXmlChildElement(*element, f) {
 
@@ -390,29 +399,29 @@ void SSR::Scene::manipulate_source(source_iterator source_to_manipulate, juce::X
             source_to_manipulate->set_y_position_discrete(static_cast<float>(f->getDoubleAttribute("y")));
         }
 
-        if (f->hasAttribute("fixed")) {
-            source_to_manipulate->set_discrete_fixed(f->getBoolAttribute("fixed"));
-        } else {
-            source_to_manipulate->set_discrete_fixed(false);
-        }
+        //if (f->hasAttribute("fixed")) {
+            //source_to_manipulate->set_discrete_fixed(f->getBoolAttribute("fixed"));
+        //} else {
+            //source_to_manipulate->set_discrete_fixed(false);
+        //}
 
     } else {
 
-        if (f->hasTagName("orientation")) {
+        //if (f->hasTagName("orientation")) {
 
-            if (f->hasAttribute("azimuth")) {
-                source_to_manipulate->set_discrete_orientation(static_cast<float>(f->getDoubleAttribute("azimuth")));
-            }
+            //if (f->hasAttribute("azimuth")) {
+                //source_to_manipulate->set_discrete_orientation(static_cast<float>(f->getDoubleAttribute("azimuth")));
+            //}
 
-        } else {
+        //} else {
 
-            if (f->hasTagName("port")) {
+            //if (f->hasTagName("port")) {
                 //WARNING: I put the getAllSubText() method in here because with getText()
                 //I dont get the string of the port
-                source_to_manipulate->set_jackport(f->getAllSubText().toStdString());
-            }
+              //  source_to_manipulate->set_jackport(f->getAllSubText().toStdString());
+            //}
 
-        }
+        //}
 
     }
 

@@ -21,10 +21,10 @@
 //Own Libs
 #include <src/utils/iconnection.h>
 #include <src/controller.h>
-#include <src/utils/logger.h>
+//#include <src/utils/logger.h>
 
 //JUCE Lib
-#include <JUCE/JuceHeader.h>
+#include <JuceLibraryCode/JuceHeader.h>
 
 //============================================================================
 // PUBLIC
@@ -80,7 +80,7 @@ bool SSR::TCP_connection::get_message(std::shared_ptr<std::string> new_message, 
 
 #if DEBUG_TCP_IN
 
-      SSR::Logger::get_instance()->log(SSR::Logger::Level::INFO, "[TCP IN]: " + *new_message, true);
+      //SSR::Logger::get_instance()->log(SSR::Logger::Level::INFO, "[TCP IN]: " + *new_message, true);
 
 #endif
 
@@ -190,15 +190,30 @@ bool SSR::TCP_connection::load_buffer(int* wait_in_msec) {
 
       int bytes_read = ss_connection.read(   	&incoming_message_buffer,
                                              	incoming_message_buffer.size(),
-                                             	false);
+                                             	false); //false
+
 
   } else {
 
     if (ready_flag == -1) {
-        SSR::Logger::get_instance()->log(SSR::Logger::Level::ERROR, "TCP/IP connection error occurred", true);
+		
+		std::fill(incoming_message_buffer.begin(), incoming_message_buffer.end(), 0x04);
+		
+		new_message_available = false;
+		load_buffer_successful = false;
+
+		disconnect();
+		
+		//SSR::Logger::get_instance()->log(SSR::Logger::Level::ERRORz, "TCP/IP connection error occurred", true);
+
+		// returing (ready_flag == 1) causing hangs?
+		return 0;
+
     }
 
   }
 
+  // returing (ready_flag == 1) causing hangs?
   return (ready_flag == 1);
+  
 }

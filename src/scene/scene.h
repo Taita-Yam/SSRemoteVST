@@ -21,7 +21,7 @@
 #include <src/scene/source.h>
 
 //JUCE Lib
-#include <JUCE/JuceHeader.h>
+#include <JuceLibraryCode/JuceHeader.h>
 
 namespace SSR
 {
@@ -117,7 +117,7 @@ namespace SSR
      * @return          True if the transferred id is available, otherwise
      *                  false.
      */
-    bool new_source(const std::string name, const unsigned int id);
+    //bool new_source(const std::string name, const unsigned int id);
 
     /**
      * Creates a new source with the transferred name, id and jackport.
@@ -139,7 +139,7 @@ namespace SSR
      * @return          True if the transferred id is available, otherwise
      *                  false.
      */
-    bool new_source(const std::string name, const unsigned int id, const std::string jackport);
+    //bool new_source(const std::string name, const unsigned int id, const std::string jackport);
 
     /**
      * Sets the id of the current selected source to the transferred id.
@@ -382,32 +382,35 @@ namespace SSR
      * @param           jackport        The jackport the current selected
      *                                  source shall be set to.
      */
-    void set_jackport_of_selected_source(const std::string jackport);
+    //void set_jackport_of_selected_source(const std::string jackport);
 
     /**
      * Returns the jackport of the current selected source.
      *
      * @return the jackport of the current selected source.
      */
-    std::string get_jackport_of_selected_source() const;
+    //std::string get_jackport_of_selected_source() const;
 
+	
   private:
 
-    /**
-     * Type definition for the source iterator.
-     */
-    typedef std::vector<SSR::Source>::iterator source_iterator;
+	/**
+	* Type definition for the source iterator.
+	*/
+	typedef std::vector<SSR::Source>::iterator source_iterator;
+
+	/**
+	*
+	* The currently selected source.
+	*/
+	source_iterator current_selected_source;
+
 
     /**
      * All sources related to this scene.
      */
     std::unique_ptr< std::vector<SSR::Source> > sources;
 
-    /**
-     *
-     * The currently selected source.
-     */
-    source_iterator current_selected_source;
 
     /**
      * The scenes range.

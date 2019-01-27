@@ -214,7 +214,7 @@ namespace SSR
      * @param       port             The port with which the source shall be
      *                               connected with (Jackport).
      **/
-    void source_port(std::ostream* output, const int source_id, const std::string port) ;
+    //void source_port(std::ostream* output, const int source_id, const std::string port) ;
 
     /**
      * This function writes the new source XML request statement into output as
@@ -229,7 +229,7 @@ namespace SSR
      * @param           x_position      The initial position on the x axis of the new source.
      * @param           y_position      The initial position on the y axis of the new source.
      */
-    void new_source(std::ostream* output, const std::string name, const std::string port, const float x_position, const float y_position);
+    //void new_source(std::ostream* output, const std::string name, const std::string port, const float x_position, const float y_position);
 
   }
 

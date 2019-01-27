@@ -23,7 +23,7 @@
 #include <src/utils/iconnection.h>
 
 //JUCE Lib
-#include <JUCE/JuceHeader.h>
+#include <JuceLibraryCode/JuceHeader.h>
 
 namespace SSR {
 
@@ -123,6 +123,8 @@ public:
 	*
 	**/
 	virtual bool is_connected() const;
+
+	bool load_buffer_successful = false;
 
 private:
 

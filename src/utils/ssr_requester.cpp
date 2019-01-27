@@ -74,12 +74,12 @@ void SSR::request::source_properties_file(std::ostream* output, const int source
   *output << "<source id=\"" << source_id << "\" properties_file=\"" << properties_file << "\"/>";
 }
 
-void SSR::request::source_port(std::ostream* output, const int source_id, const std::string port)
-{
-  *output << "<source id=\"" << source_id << "\" port=\"" << port << "\"/>";
-}
+//void SSR::request::source_port(std::ostream* output, const int source_id, const std::string port)
+//{
+//  *output << "<source id=\"" << source_id << "\" port=\"" << port << "\"/>";
+//}
 
-void SSR::request::new_source(std::ostream* output, const std::string name, const std::string port, const float x_position, const float y_position)
-{
-  *output << "<source new=\"true\" name=\"" << name << "\" port=\"" << port << "\"><position x=\"" << x_position << "\" y=\"" << y_position << "\"/></source>";
-}
+//void SSR::request::new_source(std::ostream* output, const std::string name, const std::string port, const float x_position, const float y_position)
+//{
+//  *output << "<source new=\"true\" name=\"" << name << "\" port=\"" << port << "\"><position x=\"" << x_position << "\" y=\"" << y_position << "\"/></source>";
+//}

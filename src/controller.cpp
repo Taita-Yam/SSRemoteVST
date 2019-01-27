@@ -20,12 +20,14 @@
 #include <memory>
 #include <stdexcept>
 #include <map>
+#include <algorithm>
+
 
 //JUCE Lib
-#include <JUCE/JuceHeader.h>
+#include <JuceLibraryCode/JuceHeader.h>
 
 //Own Libs
-#include <src/utils/jack_client.h>
+//#include <src/utils/jack_client.h>
 #include <src/utils/tcp_connection.h>
 #include <src/utils/ssr_requester.h>
 #include <src/utils/helper.h>
@@ -36,7 +38,8 @@
 #include <src/scene/source.h>
 #include <src/controller.h>
 #include <src/utils/random_machine.h>
-#include <src/utils/logger.h>
+//#include <src/utils/logger.h>
+
 
 //Boost Libs
 #include <boost/filesystem.hpp>
@@ -63,17 +66,24 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 }
 
 Controller::Controller()
-  : ui_update_flag(true)
-  , tcp_connection(nullptr)
-  , message_to_ssr(new std::string(""))
-  , message_from_ssr(new std::string(""))
-  , jack_client(new SSR::Jack_client())
-  , requester(new SSR::SSR_requester())
-  , config(nullptr)
-  , scene(new SSR::Scene(20.0f))
+	: ui_update_flag(true)
+	, tcp_connection(nullptr)
+	, message_to_ssr(new std::string(""))
+	, message_from_ssr(new std::string(""))
+	//, jack_client(new SSR::Jack_client())
+	, requester(new SSR::SSR_requester())
+	, config(nullptr)
+	, scene(new SSR::Scene(30.0f))
+	, treeState(*this, nullptr, "PARAMETERS", { std::make_unique<AudioParameterFloat>(X_ID, X_NAME,-30.0f, 30.0f, 0.0f)
+											,	std::make_unique<AudioParameterFloat>(Y_ID, Y_NAME,-30.0f, 30.0f, 0.0f)
+											,	std::make_unique<AudioParameterInt>(SOURCE_ID, SOURCE_NAME, 0, 14, 0)
+												})
+
+
 {
-  SSR::Logger::get_instance()->log(SSR::Logger::Level::INFO, "Constructor of Controller was called!", false);
-  SSR::Logger::get_instance()->log(SSR::Logger::Level::INFO, "Build: 6", false);
+ 
+  //SSR::Logger::get_instance()->log(SSR::Logger::Level::ERRORz, "Constructor of Controller was called!", true);
+  //SSR::Logger::get_instance()->log(SSR::Logger::Level::INFO, "Build: 6", false);
 
   boost::filesystem::path config_file = get_config_file_path();
   config = std::unique_ptr<SSR::Config>(new SSR::Config(config_file));
@@ -81,17 +91,17 @@ Controller::Controller()
 
   connect();
 
-  const char* jack_client_name = JucePlugin_Name;
+  //const char* jack_client_name = JucePlugin_Name;
 
-  try {
-      jack_client->register_client(jack_client_name);
-  } catch (SSR::jack_server_not_running_exception& jsnre) {
-      SSR::Logger::get_instance()->log(SSR::Logger::Level::ERROR, jsnre.what(), LOG_TO_FILE);
-  } catch (std::exception& e) {
-      SSR::Logger::get_instance()->log(SSR::Logger::Level::ERROR, e.what(), LOG_TO_FILE);
-  }
+  //try {
+  //    jack_client->register_client(jack_client_name);
+  //} catch (SSR::jack_server_not_running_exception& jsnre) {
+  //    SSR::Logger::get_instance()->log(SSR::Logger::Level::ERRORz, jsnre.what(), LOG_TO_FILE);
+  //} catch (std::exception& e) {
+  //    SSR::Logger::get_instance()->log(SSR::Logger::Level::ERRORz, e.what(), LOG_TO_FILE);
+  //}
 
-  read_ssr_incoming_message();
+  //	read_ssr_incoming_message();
 }
 
 Controller::~Controller()
@@ -123,6 +133,8 @@ void Controller::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessag
 
 }
 
+/*
+
 const juce::String Controller::getInputChannelName(int channelIndex) const
 {
   return juce::String(channelIndex + 1);
@@ -148,10 +160,14 @@ bool Controller::silenceInProducesSilenceOut() const
   return false;
 }
 
+*/
+
 double Controller::getTailLengthSeconds() const
 {
   return 0.0;
 }
+
+
 
 bool Controller::acceptsMidi() const
 {
@@ -181,190 +197,8 @@ bool Controller::hasEditor() const
   return true;
 }
 
-int Controller::getNumParameters() {
-  return SSR::Source::parameter::parameter_count;
-}
 
-const juce::String Controller::getParameterName(int parameterIndex)
-{
-  typedef SSR::Source::parameter source_parameter;
 
-  std::string parameter_name = "No Name Specified";
-
-  switch (parameterIndex)
-  {
-    case source_parameter::x_position_idx:
-      parameter_name = scene->get_x_position_of_selected_source().get_name();
-      break;
-
-    case source_parameter::y_position_idx:
-      parameter_name = scene->get_y_position_of_selected_source().get_name();
-      break;
-
-    case source_parameter::gain_idx:
-      parameter_name = scene->get_gain_of_selected_source().get_name();
-      break;
-
-    case source_parameter::orientation_idx:
-      parameter_name = scene->get_orientation_of_selected_source().get_name();
-      break;
-
-    case source_parameter::mute_idx:
-      parameter_name = scene->get_mute_of_selected_source().get_name();
-      break;
-
-    case source_parameter::model_point_idx:
-      parameter_name = scene->get_model_point_of_selected_source().get_name();
-      break;
-
-    case source_parameter::fixed_idx:
-      parameter_name = scene->get_fixed_of_selected_source().get_name();
-      break;
-
-    default:
-      break;
-
-  }
-
-  return juce::String(parameter_name);
-}
-
-float Controller::getParameter(int index)
-{
-  typedef SSR::Source::parameter source_parameter;
-
-  float parameter_as_float = 0.0f;
-
-  switch (index)
-  {
-    case source_parameter::x_position_idx:
-      parameter_as_float = scene->get_x_position_of_selected_source().get_continuous_value();
-      break;
-
-    case source_parameter::y_position_idx:
-      parameter_as_float = scene->get_y_position_of_selected_source().get_continuous_value();
-      break;
-
-    case source_parameter::gain_idx:
-      parameter_as_float = scene->get_gain_of_selected_source().get_continuous_value();
-      break;
-
-    case source_parameter::orientation_idx:
-      parameter_as_float = scene->get_orientation_of_selected_source().get_continuous_value();
-      break;
-
-    case source_parameter::mute_idx:
-      parameter_as_float = scene->get_mute_of_selected_source().get_continuous_value();
-      break;
-
-    case source_parameter::model_point_idx:
-      parameter_as_float = scene->get_model_point_of_selected_source().get_continuous_value();
-      break;
-
-    case source_parameter::fixed_idx:
-      parameter_as_float = scene->get_fixed_of_selected_source().get_continuous_value();
-      break;
-
-    default:
-      break;
-
-  }
-
-  return parameter_as_float;
-}
-
-const juce::String Controller::getParameterText(int index)
-{
-  typedef SSR::Source::parameter source_parameter;
-
-  std::string parameter_text = "0.0";
-
-  switch (index)
-  {
-    case source_parameter::x_position_idx:
-      parameter_text = scene->get_x_position_of_selected_source().get_continuous_value();
-      break;
-
-    case source_parameter::y_position_idx:
-      parameter_text = scene->get_y_position_of_selected_source().get_continuous_value();
-      break;
-
-    case source_parameter::gain_idx:
-      parameter_text = scene->get_gain_of_selected_source().get_continuous_value();
-      break;
-
-    case source_parameter::orientation_idx:
-      parameter_text = scene->get_orientation_of_selected_source().get_continuous_value();
-      break;
-
-    case source_parameter::mute_idx:
-      parameter_text = scene->get_mute_of_selected_source().get_continuous_value();
-      break;
-
-    case source_parameter::model_point_idx:
-      parameter_text = scene->get_model_point_of_selected_source().get_continuous_value();
-      break;
-
-    case source_parameter::fixed_idx:
-      parameter_text = scene->get_fixed_of_selected_source().get_continuous_value();
-      break;
-
-    default:
-      break;
-
-  }
-
-  return juce::String(parameter_text);
-}
-
-void Controller::setParameter(int parameterIndex, float newValue)
-{
-  typedef SSR::Source::parameter source_parameter;
-  typedef SSR::Update_specificator::Specificators update_specificators;
-
-  SSR::Update_specificator specificator { update_specificators::position };
-
-  switch (parameterIndex)
-  {
-    case source_parameter::x_position_idx:
-      scene->set_x_position_continuous_of_selected_source(newValue);
-      break;
-
-    case source_parameter::y_position_idx:
-      scene->set_y_position_continuous_of_selected_source(newValue);
-      break;
-
-    case source_parameter::gain_idx:
-      scene->set_gain_continuous_of_selected_source(newValue);
-      specificator = update_specificators::gain;
-      break;
-
-    case source_parameter::orientation_idx:
-      //TODO: Not possible for now!
-      break;
-
-    case source_parameter::mute_idx:
-      scene->set_mute_continuous_of_selected_source(newValue);
-      specificator = update_specificators::mute;
-      break;
-
-    case source_parameter::model_point_idx:
-      scene->set_model_point_continuous_of_selected_source(newValue);
-      specificator = update_specificators::model;
-      break;
-
-    case source_parameter::fixed_idx:
-      scene->set_fixed_continuous_of_selected_source(newValue);
-      specificator = update_specificators::fixed;
-      break;
-
-    default:
-      break;
-
-  }
-
-  update_ssr(specificator);
-}
 
 int Controller::getNumPrograms()
 {
@@ -393,34 +227,25 @@ void Controller::changeProgramName(int index, const juce::String& newName)
 
 void Controller::getStateInformation(MemoryBlock& destData)
 {
-  /**
-  XmlElement root("Root");
-  std::unique_ptr<XmlElement> el(new XmlElement(""));
 
-  *el = root.createNewChildElement(juce::String(scene->get_x_position_of_selected_source().get_name()));
-  el->addTextElement(juce::String(scene->get_x_position_of_selected_source().get_continuous_value()));
+	//std::unique_ptr <XmlElement> xml (treeState.state.createXml());
+	//copyXmlToBinary(*xml, destData);
 
-  *el = root.createNewChildElement(juce::String(scene->get_y_position_of_selected_source().get_name()));
-  el->addTextElement(juce::String(scene->get_y_position_of_selected_source().get_continuous_value()));
+}
 
-  *el = root.createNewChildElement(juce::String(scene->get_gain_of_selected_source().get_name()));
-  el->addTextElement(juce::String(scene->get_gain_of_selected_source().get_continuous_value()));
+void Controller::setStateInformation(const void* data, int sizeInBytes)
+{
+	
+	//std::unique_ptr <XmlElement> params_to_load(getXmlFromBinary(data, sizeInBytes));
 
-  *el = root.createNewChildElement(juce::String(scene->get_orientation_of_selected_source().get_name()));
-  el->addTextElement(juce::String(scene->get_orientation_of_selected_source().get_continuous_value()));
+	//if (params_to_load != nullptr)
+	//{
+		//if (params_to_load->hasTagName(treeState.state.getType()))
+		//{
+			//treeState.state = ValueTree::fromXml(*params_to_load);
+		//}
+	//}
 
-  *el = root.createNewChildElement(juce::String(scene->get_mute_of_selected_source().get_name()));
-  el->addTextElement(juce::String(scene->get_mute_of_selected_source().get_continuous_value()));
-
-  *el = root.createNewChildElement(juce::String(scene->get_model_point_of_selected_source().get_name()));
-  el->addTextElement(juce::String(scene->get_model_point_of_selected_source().get_continuous_value()));
-
-  *el = root.createNewChildElement(juce::String(scene->get_fixed_of_selected_source().get_name()));
-  el->addTextElement(juce::String(scene->get_fixed_of_selected_source().get_continuous_value()));
-
-  copyXmlToBinary(root, destData);
-
-  **/
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -488,28 +313,28 @@ void Controller::set_properties_file_of_selected_source(const std::string value)
   ui_update_flag = true;
 }
 
-void Controller::set_jackport_of_selected_source(const std::string jackport)
-{
-  scene->set_jackport_of_selected_source(jackport);
-  update_ssr(SSR::Update_specificator(SSR::Update_specificator::port));
-  ui_update_flag = true;
-}
+//void Controller::set_jackport_of_selected_source(const std::string jackport)
+//{
+//  scene->set_jackport_of_selected_source(jackport);
+//  update_ssr(SSR::Update_specificator(SSR::Update_specificator::port));
+//  ui_update_flag = true;
+//}
 
 bool Controller::select_source(const int id)
 {
   return scene->select_source(id);
 }
 
-void Controller::new_source()
-{
-  unsigned int id = scene->new_source("Source" + SSR::Random_machine::get_instance()->generate_string(5, 'A', 'Z'));
-  update_ssr(SSR::Update_specificator(SSR::Update_specificator::new_source));
-  ui_update_flag = true;
-}
+//void Controller::new_source()
+//{
+  //unsigned int id = scene->new_source("Source" + SSR::Random_machine::get_instance()->generate_string(5, 'A', 'Z'));
+  //update_ssr(SSR::Update_specificator(SSR::Update_specificator::new_source));
+  //ui_update_flag = true;
+//}
 
 bool Controller::read_ssr_incoming_message()
 {
-  int wait_in_msec = 0;
+	int wait_in_msec = 1; // Try 10 or 100?
 
   bool message_incoming = false;
 
@@ -535,6 +360,11 @@ void Controller::connect()
   tcp_connection->connect();
 }
 
+void Controller::disconnect()
+{
+	tcp_connection->disconnect();
+}
+
 bool Controller::is_connected_to_ssr() const
 {
   return tcp_connection->is_connected();
@@ -555,6 +385,7 @@ void Controller::ui_clear_update_flag()
   ui_update_flag = false;
 }
 
+/*
 std::vector<std::string> Controller::get_all_jack_ports(const unsigned long flags)
 {
   std::vector<std::string> available_jack_ports;
@@ -563,13 +394,14 @@ std::vector<std::string> Controller::get_all_jack_ports(const unsigned long flag
   try {
       available_jack_ports = jack_client->look_up_jack_ports(flags);
   } catch (SSR::jack_server_not_running_exception& jsnre) {
-      SSR::Logger::get_instance()->log(SSR::Logger::Level::ERROR, jsnre.what(), LOG_TO_FILE);
+      SSR::Logger::get_instance()->log(SSR::Logger::Level::ERRORz, jsnre.what(), LOG_TO_FILE);
   } catch (std::exception& e) {
-      SSR::Logger::get_instance()->log(SSR::Logger::Level::ERROR, e.what(), LOG_TO_FILE);
+      SSR::Logger::get_instance()->log(SSR::Logger::Level::ERRORz, e.what(), LOG_TO_FILE);
   }
 
   return available_jack_ports;
 }
+*/
 
 void Controller::update_ssr(SSR::Update_specificator specificator)
 {
@@ -645,25 +477,25 @@ void Controller::update_ssr(SSR::Update_specificator specificator)
       ));
       break;
 
-    case SSR::Update_specificator::Specificators::port:
-      *message_to_ssr = requester->build(std::bind(
-          SSR::request::source_port,
-          std::placeholders::_1,
-          scene->get_id_of_selected_source(),
-          scene->get_jackport_of_selected_source()
-      ));
-      break;
+    //case SSR::Update_specificator::Specificators::port:
+      //*message_to_ssr = requester->build(std::bind(
+          //SSR::request::source_port,
+          //std::placeholders::_1,
+          //scene->get_id_of_selected_source(),
+          //scene->get_jackport_of_selected_source()
+      //));
+      //break;
 
-    case SSR::Update_specificator::Specificators::new_source:
-      *message_to_ssr = requester->build(std::bind(
-          SSR::request::new_source,
-          std::placeholders::_1,
-          scene->get_name_of_selected_source(),
-          scene->get_jackport_of_selected_source(),
-          scene->get_x_position_of_selected_source().get_discrete_value(),
-          scene->get_y_position_of_selected_source().get_discrete_value()
-      ));
-      break;
+    //case SSR::Update_specificator::Specificators::new_source:
+      //*message_to_ssr = requester->build(std::bind(
+        //  SSR::request::new_source,
+          //std::placeholders::_1,
+          //scene->get_name_of_selected_source(),
+          //scene->get_jackport_of_selected_source(),
+          //scene->get_x_position_of_selected_source().get_discrete_value(),
+          //scene->get_y_position_of_selected_source().get_discrete_value()
+      //));
+      //break;
 
     default:
       break;
@@ -684,7 +516,8 @@ std::shared_ptr< std::vector< std::pair<unsigned int, std::string> > > Controlle
 
 void Controller::send_message_to_ssr()
 {
-  tcp_connection->send_message(message_to_ssr, 0x00);
+
+	tcp_connection->send_message(message_to_ssr, 0x01);
 
   //Reset message to empty string after sending the message
   *message_to_ssr = std::string("");
@@ -698,11 +531,11 @@ boost::filesystem::path Controller::get_config_file_path()
   try {
       config_file_location = SSR::helper::get_environment_variable("SSREMOTE_VST");
   } catch (std::invalid_argument& iae) {
-      SSR::Logger::get_instance()->log(SSR::Logger::Level::ERROR, iae.what(), LOG_TO_FILE);
+      //SSR::Logger::get_instance()->log(SSR::Logger::Level::ERRORz, iae.what(), LOG_TO_FILE);
   }
 
   if (!bfs::is_directory(config_file_location)) {
-      SSR::Logger::get_instance()->log(SSR::Logger::Level::ERROR, "Configfile location is not a directory!", LOG_TO_FILE);
+      //SSR::Logger::get_instance()->log(SSR::Logger::Level::ERRORz, "Configfile location is not a directory!", LOG_TO_FILE);
   }
 
   std::string filename = "ssremote_config.xml";
@@ -710,17 +543,14 @@ boost::filesystem::path Controller::get_config_file_path()
   boost::filesystem::path config_file_path = config_file_location / bfs::path(filename);
 
   if (!bfs::is_regular_file(config_file_path)) {
-      SSR::Logger::get_instance()->log(SSR::Logger::Level::ERROR, "Configfile is not a regular file!", LOG_TO_FILE);
+      //SSR::Logger::get_instance()->log(SSR::Logger::Level::ERRORz, "Configfile is not a regular file!", LOG_TO_FILE);
   }
 
   return config_file_path;
 }
 
 
-void Controller::setStateInformation (const void* data, int sizeInBytes)
-{
-  //TODO: Implement this method!
-}
+
 
 
 

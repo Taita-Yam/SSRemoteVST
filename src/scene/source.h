@@ -126,7 +126,7 @@ namespace SSR
      * @param           jackport        The jackport this source shall connect
      *                                  to.
      */
-    explicit Source(const unsigned int id, const std::string name, float scene_range, const std::string jackport);
+    //explicit Source(const unsigned int id, const std::string name, float scene_range, const std::string jackport);
 
     /**
      * Copy constructor.
@@ -391,14 +391,14 @@ namespace SSR
      *
      * @param           name               The name of the source jackport.
      */
-    void set_jackport(const std::string name);
+    //void set_jackport(const std::string name);
 
     /**
      * Returns the name of the jackport this source is connected to.
      *
      * @return the name of the jackport this source is connected to.
      */
-    std::string get_jackport() const;
+    //std::string get_jackport() const;
 
     /**
      * This method sets all parameters to the default values.
@@ -482,7 +482,7 @@ namespace SSR
     /**
      * The source port (Jackport).
      */
-    std::string jackport;
+    //std::string jackport;
 
   };
 
